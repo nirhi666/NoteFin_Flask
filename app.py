@@ -96,8 +96,20 @@ def api_toggle_lock(note_id):
         "locked": notes[note_id]["locked"]
     })
 
+
+@app.after_request
+def add_no_cache_headers(resp):
+    resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    resp.headers['Pragma'] = 'no-cache'
+    resp.headers['Expires'] = '0'
+    return resp
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+
+
 
 @app.after_request
 def add_no_cache_headers(resp):
